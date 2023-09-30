@@ -11,26 +11,66 @@
 {% endcomment %}
 {%- unless product.has_only_default_variant -%}
   {%- if block.settings.picker_type == 'button' -%}
-    <variant-radios
-      id="variant-radios-{{ section.id }}"
-      class="no-js-hidden"
-      data-section="{{ section.id }}"
-      data-url="{{ product.url }}"
-      {% if update_url == false %}
-        data-update-url="false"
+    {% comment %} 
+      - Configured the option type (Radiobutton or Dropdown) by the name of the variant option.
+      - Used the dropdown component codes in Theme
+    {% endcomment %}
+    {%- for option in product.options_with_values -%}
+      {% if option.name == 'Color' %}
+        <variant-radios
+          id="variant-radios-{{ section.id }}"
+          class="no-js-hidden"
+          data-section="{{ section.id }}"
+          data-url="{{ product.url }}"
+          {% if update_url == false %}
+            data-update-url="false"
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+
+          <fieldset class="js product-form__input variant-field-set">
+            <legend class="form__label">{{ option.name }}</legend>
+            {% render 'product-variant-options', product: product, option: option, block: block %}
+          </fieldset>
+
+          <script type="application/json">
+            {{ product.variants | json }}
+          </script>
+        </variant-radios>
+      {% else %}
+        <variant-selects
+          id="variant-selects-{{ section.id }}"
+          class="no-js-hidden"
+          data-section="{{ section.id }}"
+          data-url="{{ product.url }}"
+          {% if update_url == false %}
+            data-update-url="false"
+          {% endif %}
+          {{ block.shopify_attributes }}
+        >
+          <div class="product-form__input product-form__input--dropdown">
+            <label class="form__label" for="Option-{{ section.id }}-{{ forloop.index0 }}">
+              {{ option.name }}
+            </label>
+            <div class="select">
+              <select
+                id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                class="variant_select__select select__select"
+                name="options[{{ option.name | escape }}]"
+                form="{{ product_form_id }}"
+              >
+                {% render 'product-variant-options', product: product, option: option, block: block %}
+              </select>
+              {% render 'icon-caret' %}
+            </div>
+          </div>
+
+          <script type="application/json">
+            {{ product.variants | json }}
+          </script>
+        </variant-selects>
       {% endif %}
-      {{ block.shopify_attributes }}
-    >
-      {%- for option in product.options_with_values -%}
-        <fieldset class="js product-form__input">
-          <legend class="form__label">{{ option.name }}</legend>
-          {% render 'product-variant-options', product: product, option: option, block: block %}
-        </fieldset>
-      {%- endfor -%}
-      <script type="application/json">
-        {{ product.variants | json }}
-      </script>
-    </variant-radios>
+    {%- endfor -%}    
   {%- else -%}
     <variant-selects
       id="variant-selects-{{ section.id }}"

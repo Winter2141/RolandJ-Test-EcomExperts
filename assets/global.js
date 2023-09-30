@@ -966,6 +966,8 @@ class VariantSelects extends HTMLElement {
     this.removeErrorMessage();
     this.updateVariantStatuses();
 
+    console.log('current Variant ----> ', this.currentVariant)
+
     if (!this.currentVariant) {
       this.toggleAddButton(true, '', true);
       this.setUnavailable();
@@ -979,7 +981,13 @@ class VariantSelects extends HTMLElement {
   }
 
   updateOptions() {
-    this.options = Array.from(this.querySelectorAll('select'), (select) => select.value);
+    this.options = Array.from(this.querySelectorAll('.variant_select__select'), (select) => select.value);
+
+    const fieldsets = Array.from(this.querySelectorAll('.variant-field-set'));
+    const fieldOption = fieldsets.map((fieldset) => {
+      return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
+    });
+    this.options = fieldOption.concat(this.options)
   }
 
   updateMasterId() {
@@ -1187,6 +1195,7 @@ class VariantSelects extends HTMLElement {
 
   getVariantData() {
     this.variantData = this.variantData || JSON.parse(this.querySelector('[type="application/json"]').textContent);
+    console.log('variant Data ---> ', this.variantData)
     return this.variantData;
   }
 }
@@ -1208,12 +1217,14 @@ class VariantRadios extends VariantSelects {
     });
   }
 
-  updateOptions() {
-    const fieldsets = Array.from(this.querySelectorAll('fieldset'));
-    this.options = fieldsets.map((fieldset) => {
-      return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
-    });
-  }
+  // Because this class extends from VariantSelects, commented this updateOptions function
+  // Don't need to use this function.
+  // updateOptions() {
+  //   const fieldsets = Array.from(this.querySelectorAll('fieldset'));
+  //   this.options = fieldsets.map((fieldset) => {
+  //     return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
+  //   });
+  // }
 }
 
 customElements.define('variant-radios', VariantRadios);
