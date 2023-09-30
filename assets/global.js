@@ -966,8 +966,6 @@ class VariantSelects extends HTMLElement {
     this.removeErrorMessage();
     this.updateVariantStatuses();
 
-    console.log('current Variant ----> ', this.currentVariant)
-
     if (!this.currentVariant) {
       this.toggleAddButton(true, '', true);
       this.setUnavailable();
@@ -1018,6 +1016,7 @@ class VariantSelects extends HTMLElement {
   }
 
   updateURL() {
+    console.log('currentVariant ======> ', this.currentVariant)
     if (!this.currentVariant || this.dataset.updateUrl === 'false') return;
     window.history.replaceState({}, '', `${this.dataset.url}?variant=${this.currentVariant.id}`);
   }
@@ -1029,6 +1028,7 @@ class VariantSelects extends HTMLElement {
   }
 
   updateVariantInput() {
+    console.log('bundle ID ------> ', document.querySelector(`#variant_meta_bundle_id_${this.currentVariant.id}`).value)
     const productForms = document.querySelectorAll(
       `#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}`
     );
@@ -1036,6 +1036,10 @@ class VariantSelects extends HTMLElement {
       const input = productForm.querySelector('input[name="id"]');
       input.value = this.currentVariant.id;
       input.dispatchEvent(new Event('change', { bubbles: true }));
+
+      const inputBundle = productForm.querySelector('input[name="bundleId"]');
+      inputBundle.value = document.querySelector(`#variant_meta_bundle_id_${this.currentVariant.id}`).value;
+      inputBundle.dispatchEvent(new Event('change', { bubbles: true }));
     });
   }
 
@@ -1197,7 +1201,6 @@ class VariantSelects extends HTMLElement {
 
   getVariantData() {
     this.variantData = this.variantData || JSON.parse(this.querySelector('[type="application/json"]').textContent);
-    console.log('variant Data ---> ', this.variantData)
     return this.variantData;
   }
 }

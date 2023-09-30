@@ -13,3 +13,11 @@ input[type="radio"]:checked + .color-button {
 input[type="radio"]:checked + .color-button:hover {
   border: 1px solid #ffffff;
 }
+
+.cart-notification-product {
+  flex-wrap: wrap;
+}
+
+.cart-notification-product div:not(.cart-notification-product__image) {
+  width: 65%;
+}

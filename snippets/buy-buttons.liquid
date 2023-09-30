@@ -59,6 +59,12 @@
           class="product-variant-id"
         >
 
+        <input
+          type="hidden"
+          name="bundleId"
+          value="{{ product.selected_or_first_available_variant.metafields.custom.bundle_item_id }}"
+        />
+
         {%- if gift_card_recipient_feature_active -%}
           {%- render 'gift-card-recipient-form', product: product, form: form, section: section -%}
         {%- endif -%}

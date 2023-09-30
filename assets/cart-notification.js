@@ -34,17 +34,40 @@ class CartNotification extends HTMLElement {
     removeTrapFocus(this.activeElement);
   }
 
-  renderContents(parsedState) {
+  // Replace or Insert the rendered HTML response from shopify by section storefront api regarding to section id.
+  renderContents(parsedState, showCart, bundleItem) {
     this.cartItemKey = parsedState.key;
     this.getSectionsToRender().forEach((section) => {
-      document.getElementById(section.id).innerHTML = this.getSectionInnerHTML(
-        parsedState.sections[section.id],
-        section.selector
-      );
+      if (showCart == true) {
+        document.getElementById(section.id).innerHTML = this.getSectionInnerHTML(
+          parsedState.sections[section.id],
+          section.selector
+        );
+      } else {
+        if (section.id == 'cart-notification-product') {
+          document.getElementById(section.id).insertAdjacentHTML('beforeend', this.getSectionInnerHTML(
+            parsedState.sections[section.id],
+            section.selector
+          ));
+        } else {
+          document.getElementById(section.id).innerHTML = this.getSectionInnerHTML(
+            parsedState.sections[section.id],
+            section.selector
+          );
+        }
+      }      
     });
 
     if (this.header) this.header.reveal();
-    this.open();
+    if (showCart) {
+      if (!bundleItem) {
+        this.open();
+      }
+    } else {
+      if (bundleItem) {
+        this.open();
+      }
+    }
   }
 
   getSectionsToRender() {

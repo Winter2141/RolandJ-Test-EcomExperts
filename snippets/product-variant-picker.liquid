@@ -108,6 +108,10 @@
   {%- endif -%}
 {%- endunless -%}
 
+{% for variant in product.variants %}
+  <input type="hidden" value="{{ variant.metafields.custom.bundle_item_id }}" id="variant_meta_bundle_id_{{ variant.id }}">
+{% endfor %}
+
 <noscript class="product-form__noscript-wrapper-{{ section.id }}">
   <div class="product-form__input{% if product.has_only_default_variant %} hidden{% endif %}">
     <label class="form__label" for="Variants-{{ section.id }}">
@@ -129,6 +133,7 @@
               disabled
             {% endif %}
             value="{{ variant.id }}"
+            data-meta="{{ variant.metafields.custom.bundle_item_id }}"
           >
             {%- liquid
               echo variant.title
