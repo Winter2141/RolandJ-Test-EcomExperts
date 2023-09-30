@@ -981,9 +981,9 @@ class VariantSelects extends HTMLElement {
   }
 
   updateOptions() {
-    this.options = Array.from(this.querySelectorAll('.variant_select__select'), (select) => select.value);
+    this.options = Array.from(document.querySelectorAll(".variant_select__select"), (select) => select.value);
 
-    const fieldsets = Array.from(this.querySelectorAll('.variant-field-set'));
+    const fieldsets = Array.from(document.querySelectorAll('.variant-filed-set'));
     const fieldOption = fieldsets.map((fieldset) => {
       return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
     });
