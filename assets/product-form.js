@@ -31,9 +31,7 @@ if (!customElements.get('product-form')) {
         delete config.headers['Content-Type'];
 
         const formData = new FormData(this.form);
-        console.log(' formData ---> ', formData)
         let params = this.serializeForm(formData)
-        console.log('params --> ', params)
 
         if (this.cart) {
           formData.append(
@@ -79,8 +77,6 @@ if (!customElements.get('product-form')) {
         })
         .then((response) => response.json())
         .then((response) => {
-          console.log('response ----> ', response)
-
           if (response.status) {
             publish(PUB_SUB_EVENTS.cartError, {
               source: 'product-form',

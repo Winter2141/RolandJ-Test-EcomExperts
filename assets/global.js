@@ -986,7 +986,6 @@ class VariantSelects extends HTMLElement {
       return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
     });
 
-    console.log('options ====> ', fieldOption)
     this.options = fieldOption.concat(this.options)
   }
 
@@ -1016,7 +1015,6 @@ class VariantSelects extends HTMLElement {
   }
 
   updateURL() {
-    console.log('currentVariant ======> ', this.currentVariant)
     if (!this.currentVariant || this.dataset.updateUrl === 'false') return;
     window.history.replaceState({}, '', `${this.dataset.url}?variant=${this.currentVariant.id}`);
   }
@@ -1028,7 +1026,6 @@ class VariantSelects extends HTMLElement {
   }
 
   updateVariantInput() {
-    console.log('bundle ID ------> ', document.querySelector(`#variant_meta_bundle_id_${this.currentVariant.id}`).value)
     const productForms = document.querySelectorAll(
       `#product-form-${this.dataset.section}, #product-form-installment-${this.dataset.section}`
     );

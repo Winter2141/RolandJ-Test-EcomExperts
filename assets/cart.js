@@ -173,10 +173,8 @@ class CartItems extends HTMLElement {
           trapFocus(cartDrawerWrapper, document.querySelector('.cart-item__name'));
         }
 
-        console.log('bundleLine =====> ', bundleLine)
         if (bundleLine.variantId && document.querySelector(`.cart_line_item_id_${bundleLine.variantId}`)) {
           const lineId = document.querySelector(`.cart_line_item_id_${bundleLine.variantId}`).value;
-          console.log('bundleLine ----> ', bundleLine.variantId, lineId);
           this.updateQuantity(parseInt(lineId), quantity, name, bundleLine.variantId);
         }
 
