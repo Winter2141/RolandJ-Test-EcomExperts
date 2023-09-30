@@ -79,6 +79,7 @@
               {%- for item in cart.items -%}
                 <tr class="cart-item" id="CartItem-{{ item.index | plus: 1 }}">
                   <td class="cart-item__media">
+                    <input type="hidden" class="cart_line_item_id_{{ item.variant.id }}" value="{{ item.index | plus: 1 }}" />
                     {% if item.image %}
                       {% comment %} Leave empty space due to a:empty CSS display: none rule {% endcomment %}
                       <a href="{{ item.url }}" class="cart-item__link" aria-hidden="true" tabindex="-1"> </a>
@@ -286,6 +287,9 @@
                         <cart-remove-button
                           id="Remove-{{ item.index | plus: 1 }}"
                           data-index="{{ item.index | plus: 1 }}"
+                          data-quantity-variant-id="{{ item.variant.id }}"
+                          data-bundle-id="{{ item.variant.metafields.custom.bundle_item_id }}"
+                          data-items="{{ cart.items }}"
                         >
                           <a
                             href="{{ item.url_to_remove }}"

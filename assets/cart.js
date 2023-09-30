@@ -5,7 +5,13 @@ class CartRemoveButton extends HTMLElement {
     this.addEventListener('click', (event) => {
       event.preventDefault();
       const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
-      cartItems.updateQuantity(this.dataset.index, 0);
+
+      if(!this.dataset.bundleId.undefined && this.dataset.bundleId && document.querySelectorAll(`.cart_line_item_id_${this.dataset.bundleId}`).length) {
+        const lineId = document.querySelector(`.cart_line_item_id_${this.dataset.bundleId}`).value;
+        cartItems.updateQuantity(this.dataset.index, 0, null, this.dataset.quantityVariantId, {lineId, variantId: this.dataset.bundleId});
+      } else {
+        cartItems.updateQuantity(this.dataset.index, 0, null, this.dataset.quantityVariantId);
+      }
     });
   }
 }
@@ -103,7 +109,7 @@ class CartItems extends HTMLElement {
     ];
   }
 
-  updateQuantity(line, quantity, name, variantId) {
+  updateQuantity(line, quantity, name, variantId, bundleLine = null) {
     this.enableLoading(line);
 
     const body = JSON.stringify({
@@ -165,6 +171,13 @@ class CartItems extends HTMLElement {
           trapFocus(cartDrawerWrapper.querySelector('.drawer__inner-empty'), cartDrawerWrapper.querySelector('a'));
         } else if (document.querySelector('.cart-item') && cartDrawerWrapper) {
           trapFocus(cartDrawerWrapper, document.querySelector('.cart-item__name'));
+        }
+
+        console.log('bundleLine =====> ', bundleLine)
+        if (bundleLine.variantId && document.querySelector(`.cart_line_item_id_${bundleLine.variantId}`)) {
+          const lineId = document.querySelector(`.cart_line_item_id_${bundleLine.variantId}`).value;
+          console.log('bundleLine ----> ', bundleLine.variantId, lineId);
+          this.updateQuantity(parseInt(lineId), quantity, name, bundleLine.variantId);
         }
 
         publish(PUB_SUB_EVENTS.cartUpdate, { source: 'cart-items', cartData: parsedState, variantId: variantId });
