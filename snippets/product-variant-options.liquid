@@ -64,8 +64,8 @@
           class="disabled"
         {% endif %}
       >
-      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}">
-        {{ value -}}
+      {% comment %} Used the color name to background style {% endcomment %}
+      <label for="{{ section.id }}-{{ option.position }}-{{ forloop.index0 }}" class="color-button" style="background: {{ value | downcase }} !important">
         <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
       </label>
     {% else %}
