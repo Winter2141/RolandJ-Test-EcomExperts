@@ -55,10 +55,12 @@
             <div class="select">
               <select
                 id="Option-{{ section.id }}-{{ forloop.index0 }}"
-                class="variant_select__select select__select"
+                class="variant_select__select select__select {{ option.name | downcase }}_variant_option_select"
                 name="options[{{ option.name | escape }}]"
                 form="{{ product_form_id }}"
+                data-url="{{ product.url }}"
               >
+                <option value="">Unselected</option>
                 {% render 'product-variant-options', product: product, option: option, block: block %}
               </select>
               {% render 'icon-caret' %}

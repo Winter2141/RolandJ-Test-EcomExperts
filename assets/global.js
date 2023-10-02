@@ -965,10 +965,10 @@ class VariantSelects extends HTMLElement {
     this.updatePickupAvailability();
     this.removeErrorMessage();
     this.updateVariantStatuses();
-
     if (!this.currentVariant) {
       this.toggleAddButton(true, '', true);
       this.setUnavailable();
+      this.updateURL();
     } else {
       this.updateMedia();
       this.updateURL();
@@ -980,7 +980,6 @@ class VariantSelects extends HTMLElement {
 
   updateOptions() {
     this.options = Array.from(document.querySelectorAll(".variant_select__select"), (select) => select.value);
-
     const fieldsets = Array.from(document.querySelectorAll('.variant-field-set'));
     const fieldOption = fieldsets.map((fieldset) => {
       return Array.from(fieldset.querySelectorAll('input')).find((radio) => radio.checked).value;
@@ -1015,6 +1014,10 @@ class VariantSelects extends HTMLElement {
   }
 
   updateURL() {
+    if(this.currentVariant === undefined) {
+      window.history.replaceState({}, '', `${this.dataset.url}`);
+      return;
+    }
     if (!this.currentVariant || this.dataset.updateUrl === 'false') return;
     window.history.replaceState({}, '', `${this.dataset.url}?variant=${this.currentVariant.id}`);
   }
@@ -1203,6 +1206,17 @@ class VariantSelects extends HTMLElement {
 }
 
 customElements.define('variant-selects', VariantSelects);
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelector(".size_variant_option_select")) {
+    const variantOption = document.querySelector(".size_variant_option_select");
+    window.history.replaceState({}, '', `${variantOption.dataset.url}`);
+    if(variantOption.parentNode?.parentNode?.parentNode?.tagName === "VARIANT-SELECTS") {
+      variantOption.parentNode.parentNode.parentNode.toggleAddButton(true, '', true);
+      variantOption.parentNode.parentNode.parentNode.setUnavailable();
+    }
+  }
+});
 
 class VariantRadios extends VariantSelects {
   constructor() {

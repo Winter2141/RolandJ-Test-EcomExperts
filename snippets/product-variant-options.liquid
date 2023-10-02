@@ -71,7 +71,7 @@
     {% else %}
       <option
         value="{{ value | escape }}"
-        {% if option.selected_value == value %}
+        {% if option.selected_value == value and  option.name != "Size" %}
           selected="selected"
         {% endif %}
       >
@@ -85,7 +85,7 @@
   {%- elsif block.settings.picker_type == 'dropdown' -%}
     <option
       value="{{ value | escape }}"
-      {% if option.selected_value == value %}
+      {% if option.selected_value == value and option.name != "Size" %}
         selected="selected"
       {% endif %}
     >
