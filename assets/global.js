@@ -969,6 +969,7 @@ class VariantSelects extends HTMLElement {
       this.toggleAddButton(true, '', true);
       this.setUnavailable();
       this.updateURL();
+      this.updateGallery();
     } else {
       this.updateMedia();
       this.updateURL();
@@ -996,6 +997,28 @@ class VariantSelects extends HTMLElement {
         })
         .includes(false);
     });
+  }
+
+  updateGallery() {
+    const currentItem = this.getVariantData().find((variant) => {
+      return variant.options
+        .map((option, index) => {
+          return this.options[index] === option;
+        })
+        .includes(true);
+    });
+    if (!currentItem) return;
+    if (!currentItem.featured_media) return;
+
+    const mediaGalleries = document.querySelectorAll(`[id^="MediaGallery-${this.dataset.section}"]`);
+    mediaGalleries.forEach((mediaGallery) =>
+      mediaGallery.setActiveMedia(`${this.dataset.section}-${currentItem.featured_media.id}`, true)
+    );
+
+    const modalContent = document.querySelector(`#ProductModal-${this.dataset.section} .product-media-modal__content`);
+    if (!modalContent) return;
+    const newMediaModal = modalContent.querySelector(`[data-media-id="${currentItem.featured_media.id}"]`);
+    modalContent.prepend(newMediaModal);
   }
 
   updateMedia() {
@@ -1208,8 +1231,13 @@ class VariantSelects extends HTMLElement {
 customElements.define('variant-selects', VariantSelects);
 
 document.addEventListener('DOMContentLoaded', function () {
+  const entries = performance.getEntriesByType("navigation");
+  console.log("DOM CONTENT LOAD", entries[0].type);
   if (document.querySelector(".size_variant_option_select")) {
     const variantOption = document.querySelector(".size_variant_option_select");
+    if (entries.length && entries[0].type === "back_forward") {
+      return false;
+    }
     window.history.replaceState({}, '', `${variantOption.dataset.url}`);
     if(variantOption.parentNode?.parentNode?.parentNode?.tagName === "VARIANT-SELECTS") {
       variantOption.parentNode.parentNode.parentNode.toggleAddButton(true, '', true);
